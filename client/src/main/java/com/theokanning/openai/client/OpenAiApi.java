@@ -37,6 +37,7 @@ import com.theokanning.openai.moderation.ModerationResult;
 import com.theokanning.openai.runs.CreateThreadAndRunRequest;
 import com.theokanning.openai.runs.Run;
 import com.theokanning.openai.runs.RunCreateRequest;
+import com.theokanning.openai.runs.StreamRunCreateRequest;
 import com.theokanning.openai.runs.RunStep;
 import com.theokanning.openai.runs.SubmitToolOutputsRequest;
 import com.theokanning.openai.threads.Thread;
@@ -47,7 +48,6 @@ import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.*;
-
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -283,6 +283,11 @@ public interface OpenAiApi {
     @Headers({"OpenAI-Beta: assistants=v2"})
     @GET("/v1/threads/{thread_id}/messages/{message_id}/files")
     Single<OpenAiResponse<MessageFile>> listMessageFiles(@Path("thread_id") String threadId, @Path("message_id") String messageId, @QueryMap Map<String, Object> filterRequest);
+
+    @Streaming
+    @Headers("OpenAI-Beta: assistants=v2")
+    @POST("/v1/threads/{thread_id}/runs")
+    Call<ResponseBody> createRun(@Path("thread_id") String threadId, @Body StreamRunCreateRequest runCreateRequest);
 
     @Headers("OpenAI-Beta: assistants=v2")
     @POST("/v1/threads/{thread_id}/runs")

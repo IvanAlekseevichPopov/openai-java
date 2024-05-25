@@ -38,11 +38,7 @@ import com.theokanning.openai.messages.ModifyMessageRequest;
 import com.theokanning.openai.model.Model;
 import com.theokanning.openai.moderation.ModerationRequest;
 import com.theokanning.openai.moderation.ModerationResult;
-import com.theokanning.openai.runs.CreateThreadAndRunRequest;
-import com.theokanning.openai.runs.Run;
-import com.theokanning.openai.runs.RunCreateRequest;
-import com.theokanning.openai.runs.RunStep;
-import com.theokanning.openai.runs.SubmitToolOutputsRequest;
+import com.theokanning.openai.runs.*;
 import com.theokanning.openai.threads.Thread;
 import com.theokanning.openai.threads.ThreadRequest;
 import io.reactivex.BackpressureStrategy;
@@ -457,6 +453,10 @@ public class OpenAiService {
         Map<String, Object> queryParameters = mapper.convertValue(params, new TypeReference<Map<String, Object>>() {
         });
         return execute(api.listMessageFiles(threadId, messageId, queryParameters));
+    }
+
+    public Flowable<RunChunk> createRun(String threadId, StreamRunCreateRequest runCreateRequest) {
+        return stream(api.createRun(threadId, runCreateRequest), RunChunk.class);
     }
 
     public Run createRun(String threadId, RunCreateRequest runCreateRequest) {
